@@ -105,7 +105,7 @@
 (defn next-state
   "Calculate the next time an item should be reviewed by a user.
 
-  quality [user-state [item-state]] -> {:new-interval ...
+  quality [user-state [item-state]] -> {:days-to-next ...
                                         :new-user-state ...
                                         :new-item-state ...}
 
@@ -119,7 +119,8 @@
 
   In addition to rescheduling the question for the new-interval, any questions
   in this session with quality lower than 3 should be reviewed cyclically until
-  quality becomes 4 or 5."
+  quality becomes 4 or 5.  You should do those repetitions on your own without
+  calling this function."
   ([quality] (next-state quality nil))
   ([quality of-matrix] (next-state quality of-matrix [0 default-ef nil nil]))
   ([quality of-matrix [last-n last-ef last-interval used-of]]

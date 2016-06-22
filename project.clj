@@ -6,4 +6,4 @@
   :scm {:name "git"
         :url "https://github.com/goldfeld/spaced-repetition.git"}
   :source-paths ["src"]
-  :dependencies [[org.clojure/clojure "1.5.1"]])
+  :dependencies [[org.clojure/clojure "1.8.0"]])

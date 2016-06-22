@@ -1,35 +1,49 @@
 * spaced-repetition
 
-Implementations of spaced repetition algorithms.
+Implementation of the SuperMemo 5 spaced repetition algorithm, with some
+additions recommended in the SuperMemo webpage [1].
 
 ** Usage
    
 *** SM-5
 
-The =determine-next-interval= function is probaly the only thing you
-need to call externally. It expects at least one argument: the quality
-of the repetition (0-5) i.e. how well the user remembered. For
-subsequent repetitions, it expects a second argument here called
-=learn-seq=, which is a vector containing 1. the repetition number =n=
-(the smallest =n= for which passing a =learn-seq= makes sense is =2=,
-because the first repetition is =n = 1= and at that point there isn't
-a previous =learn-seq=), 2. the easing factor and 3. the optimal
-factors matrix--implemented as a Clojure map with integers (values of
-=n=) for keys.
+The =next-state= function is probaly the only thing you need to call externally.
+It expects at least one argument: the quality of the repetition (0-5) i.e. how
+well the user remembered.
+
+For subsequent repetitions of any question/answer pair by this user, it expects
+a second argument that models the learning process of a given user (in SM-5
+parlance, this is the `optimal factor matrix').
+
+For subsequent repetitions of this particular question/answer pair by this user,
+it expects a third argument that models the user's state of learning for this
+particular item. In SM-5 parlance, this comprises the repetition number,
+easiness factor, interval, and optimal factor used to calculate it.
 
 You actually mostly don't have to worry about =learn-seq=, because
-=determine-next-interval= returns a map with two keys:
+=next-state= returns a map with three keys:
 
-1. =:learn-seq=, which is the one you should feed back in the next
-   repetition, so a spaced repetition app will want to serialize/save
-   this =learn-seq=
-
-2. =:days-to-next=, which is how many days into the future you should
+1. =:days-to-next=, which is how many days into the future you should
    schedule this next repetition.
+
+2. =:new-user-state=, which you should feed back as the second argument in the
+   next repetition of any item by this user, and
+
+3. =:new-item-state=, which is the one you should feed back as the third
+   argument in the next repetition of this item by this user.
+
+Thus, a spaced repetition app will want to serialize/save =:new-user-state= and
+=:new-item-state= in a per user basis.
 
 ** License
 
 Copyright © 2014 Vic Goldfeld
 
+Includes modifications by Estevo U. Caamanho Castro.
+
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
+
+** Footnotes
+
+[1] https://www.supermemo.com/english/ol/sm5.htm

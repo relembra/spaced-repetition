@@ -142,6 +142,6 @@
          new-interval (near-optimal-interval
                        (or last-interval 0)
                        (inter-repetition-interval new-n new-ef new-ofm last-interval))]
-     {:new-interval new-interval
+     {:days-to-next new-interval
       :new-user-state new-ofm
       :new-item-state [new-n new-ef new-interval (ofm-ref new-ofm new-n new-ef)]})))

@@ -1,4 +1,4 @@
-(defproject org.clojars.euccastro/spaced-repetition "0.1.2"
+(defproject org.clojars.euccastro/spaced-repetition "0.1.3-SNAPSHOT"
   :description "Implementations of the SM-5 spaced repetition algorithm."
   :url "http://github.com/relembra/spaced-repetition"
   :license {:name "Eclipse Public License"

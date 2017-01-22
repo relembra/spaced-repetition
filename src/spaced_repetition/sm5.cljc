@@ -122,27 +122,29 @@
   quality becomes 4 or 5.  You should do those repetitions on your own without
   calling this function."
   ([quality] (next-state quality nil))
-  ([quality of-matrix] (next-state quality of-matrix [0 default-ef nil nil]))
+  ([quality of-matrix] (next-state quality of-matrix nil))
   ([quality of-matrix [last-n last-ef last-interval used-of]]
-   (assert (>= last-n 0))
-   (assert (<= 0 quality 5))
-   (assert (or (not last-interval) (> last-interval 0)))
-   (let [new-n (if (< quality 3) 1 (+ last-n 1))
-         new-ef (modify-e-factor last-ef quality)
-         old-of (ofm-ref of-matrix last-n last-ef)
-         new-of (when last-interval
-                  (calculate-new-optimal-factor
-                   last-interval
-                   quality
-                   used-of
-                   old-of
-                   learn-fraction))
-         new-ofm (if new-of
-                   (ofm-set of-matrix last-n last-ef new-of)
-                   of-matrix)
-         new-interval (near-optimal-interval
-                       (or last-interval 0)
-                       (inter-repetition-interval new-n new-ef new-ofm last-interval))]
-     {:days-to-next new-interval
-      :new-user-state new-ofm
-      :new-item-state [new-n new-ef new-interval (ofm-ref new-ofm new-n new-ef)]})))
+   (let [last-n (or last-n 0)
+         last-ef (or last-ef default-ef)]
+     (assert (>= last-n 0))
+     (assert (<= 0 quality 5))
+     (assert (or (not last-interval) (> last-interval 0)))
+     (let [new-n (if (< quality 3) 1 (+ last-n 1))
+           new-ef (modify-e-factor last-ef quality)
+           old-of (ofm-ref of-matrix last-n last-ef)
+           new-of (when last-interval
+                    (calculate-new-optimal-factor
+                     last-interval
+                     quality
+                     used-of
+                     old-of
+                     learn-fraction))
+           new-ofm (if new-of
+                     (ofm-set of-matrix last-n last-ef new-of)
+                     of-matrix)
+           new-interval (near-optimal-interval
+                         (or last-interval 0)
+                         (inter-repetition-interval new-n new-ef new-ofm last-interval))]
+       {:days-to-next new-interval
+        :new-user-state new-ofm
+        :new-item-state [new-n new-ef new-interval (ofm-ref new-ofm new-n new-ef)]}))))
